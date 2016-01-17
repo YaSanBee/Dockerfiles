@@ -25,7 +25,7 @@ ENV    DOCKER_HOME /home/docker
 ADD    ./Config/* ${DOCKER_HOME}/Config/
 
 # Install Nginx & Supervisor
-RUN    sudo apt-key add ${DOCKER_HOME}/Config/nginx_signing.key \
+RUN    apt-key add ${DOCKER_HOME}/Config/nginx_signing.key \
                     && echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list \
                     && echo "deb-src http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list \
                     && apt-get update \
