@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# YaSanBee/Dockerfiles/Python/3.4.2/Django-uWSGI-Nginx
+# [ GitHub ] - YaSanBee/Dockerfiles/Python/3.4.2/Django-uWSGI-Nginx
 #
-# VERSION [ 0.0.1 ]
+# [ DockerHub ] - yasanbee/python-django-uwsgi-nginx
+#
+# VERSION [ 0.0.3 ]
 
 FROM    python:3.4.2
 
