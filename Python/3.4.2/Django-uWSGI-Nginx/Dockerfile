@@ -22,24 +22,39 @@ MAINTAINER    YaSanBee    <YaSanBee.ZERG@gmail.com>
 
 ENV    DOCKER_HOME /home/docker
 
-ADD    ./Config/* ${DOCKER_HOME}/Config
+ADD    ./Config/* ${DOCKER_HOME}/Config/
 
-# Install Nginx
+# Install Nginx & Supervisor
 RUN    sudo apt-key add ${DOCKER_HOME}/Config/nginx_signing.key \
                     && echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list \
                     && echo "deb-src http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list \
                     && apt-get update \
-                    && apt-get install -y nginx \
+                    && apt-get install -y nginx supervisor \
                     && rm -rf /var/lib/apt/lists/*
+
+# Setup Nginx & Supervisor
+RUN    rm -rf /etc/nginx/conf.d/* \
+                    && cp ${DOCKER_HOME}/Config/Nginx-uWSGI-Django.conf /etc/nginx/conf.d/ \
+                    && cp ${DOCKER_HOME}/Config/Supervisor.conf /etc/supervisord.d/ \
+                    && echo "daemon off;" >> /etc/nginx/nginx.conf
 
 # Install uWSGI
 RUN    pip install uwsgi
 
-# Install Project
-ONBUILD    ADD    . ${DOCKER_HOME}/Project
+# Setup uWSGI
+RUN    useradd uwsgi -s /bin/false \
+                    && mkdir /var/log/uwsgi \
+                    && chown -R uwsgi:uwsgi /var/log/uwsgi \
+                    && mkdir /var/run/ZergPools \
+                    && chown -R uwsgi:uwsgi /var/run/ZergPools \
+                    && mkdir /var/run/uwsgi \
+                    && chown -R uwsgi:uwsgi /var/run/uwsgi
+
+# Install Project & Django
+ONBUILD    ADD    . ${DOCKER_HOME}/Project/
 ONBUILD    RUN    if [ -f ${DOCKER_HOME}/Project/requirements.txt ]; \
                                             then pip install -r ${DOCKER_HOME}/Project/requirements.txt; fi
 
-EXPOSE    80
+EXPOSE    8080
 
-CMD    ["supervisord", "-n"]
+CMD    ["/bin/bash"]
