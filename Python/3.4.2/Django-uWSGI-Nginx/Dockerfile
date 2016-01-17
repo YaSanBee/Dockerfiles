@@ -35,7 +35,7 @@ RUN    apt-key add ${DOCKER_HOME}/Config/nginx_signing.key \
 # Setup Nginx & Supervisor
 RUN    rm -rf /etc/nginx/conf.d/* \
                     && cp ${DOCKER_HOME}/Config/Nginx-uWSGI-Django.conf /etc/nginx/conf.d/ \
-                    && cp ${DOCKER_HOME}/Config/Supervisor.ini /etc/supervisord.d/ \
+                    && cp ${DOCKER_HOME}/Config/Supervisor.conf /etc/supervisor/conf.d/ \
                     && echo "daemon off;" >> /etc/nginx/nginx.conf
 
 # Install uWSGI
